@@ -100,4 +100,4 @@ def delete_picture(id):
             return "", 204
         return {"message": "File not found"}, 404
 
-    return {"message": "Internal server error"}, 500    
+    return {"message": "Internal server error"}, 500
