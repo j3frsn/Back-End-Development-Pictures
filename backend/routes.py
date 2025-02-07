@@ -58,17 +58,15 @@ def get_picture_by_id(id):
 # CREATE A PICTURE
 ######################################################################
 @app.route("/picture", methods=["POST"])
-def create_picture():
-    picture = request.get_json()
-    if picture:
-        for pic in data:
+def create_picture():    
+    new_picture = request.get_json()
+    if new_picture:
+        for picture in data:
             # Tests if the pic already exists...
-            if pic["id"] == picture["id"]:
-                return {"Message": f"picture with id {picture['id']} already present"}, 302
-        data.append(picture)
-        return make_response(jsonify(data[picture["id"]]), 201)
-
-    return {"message": "Internal server error"}, 500
+            if picture["id"] == new_picture["id"]:
+                return {"Message": f"picture with id {new_picture['id']} already present"}, 302
+        data.append(new_picture)
+        return new_picture, 201
 
 ######################################################################
 # UPDATE A PICTURE
@@ -77,17 +75,30 @@ def create_picture():
 
 @app.route("/picture/<int:id>", methods=["PUT"])
 def update_picture(id):
-    picture = request.get_json()
-    if picture:
-        for pic in data:
+    new_picture = request.get_json()
+    if new_picture:
+        for picture in data:
             # Tests if the pic already exists...
-            if pic["id"] == picture["id"]:
-                data[pic] = picture
-                return {"message": f"picture with id {picture['id']} updated"}, 200
-        data.append(picture)
-        return make_response(jsonify(data[picture["id"]]), 201)
+            if picture["id"] == new_picture["id"]:
+                data[new_picture["id"]] = new_picture
+                return {"Message": f"picture with id {new_picture['id']} already present"}, 302
+        data.append(new_picture)
+        return new_picture, 201
+    # picture = request.get_json()
 
-    return {"message": "Internal server error"}, 500
+    # data.append(picture)
+    # new_picture = data[id]
+    # return new_picture, 201
+    # if picture:
+    #     for pic in data:
+    #         # Tests if the pic already exists...
+    #         if pic["id"] == picture["id"]:
+    #             data[pic] = picture
+    #             return {"message": f"picture with id {picture['id']} updated"}, 200
+    #     data.append(picture)
+    #     return make_response(jsonify(data[picture["id"]]), 201)
+
+    # return {"message": "Internal server error"}, 500
 
 ######################################################################
 # DELETE A PICTURE
