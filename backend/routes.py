@@ -59,13 +59,14 @@ def get_picture_by_id(id):
 ######################################################################
 @app.route("/picture", methods=["POST"])
 def create_picture():
-    new_pic = request.get_json()
-    if new_pic:
+    picture = request.get_json()
+    if picture:
         for pic in data:
             # Tests if the pic already exists...
-            if pic["id"] == new_pic["id"]:
+            if pic["id"] == picture["id"]:
                 return {"Message": f"picture with id {picture['id']} already present"}, 302
-        return data.append(new_pic)
+        data.append(picture)
+        return make_response(jsonify(data[picture["id"]]), 201)
 
     return {"message": "Internal server error"}, 500
 
@@ -76,11 +77,27 @@ def create_picture():
 
 @app.route("/picture/<int:id>", methods=["PUT"])
 def update_picture(id):
-    pass
+    picture = request.get_json()
+    if picture:
+        for pic in data:
+            # Tests if the pic already exists...
+            if pic["id"] == picture["id"]:
+                data[pic] = picture
+                return {"message": f"picture with id {picture['id']} updated"}, 200
+        data.append(picture)
+        return make_response(jsonify(data[picture["id"]]), 201)
+
+    return {"message": "Internal server error"}, 500
 
 ######################################################################
 # DELETE A PICTURE
 ######################################################################
 @app.route("/picture/<int:id>", methods=["DELETE"])
 def delete_picture(id):
-    pass
+    if data:
+        if data[id]:
+            data.remove(id)
+            return "", 204
+        return {"message": "File not found"}, 404
+
+    return {"message": "Internal server error"}, 500    
