@@ -75,31 +75,16 @@ def create_picture():
 
 @app.route("/picture/<int:id>", methods=["PUT"])
 def update_picture(id):
-    new_picture = request.get_json()
-    if new_picture:
-        for picture in data:
-            # Tests if the pic already exists...
-            if picture["id"] == new_picture["id"]:
-                data[new_picture["id"]] = new_picture
-                return {"Message": f"picture with id {new_picture['id']} already present"}, 302
-        data.append(new_picture)
-        return new_picture, 201
-    # picture = request.get_json()
 
-    # data.append(picture)
-    # new_picture = data[id]
-    # return new_picture, 201
-    # if picture:
-    #     for pic in data:
-    #         # Tests if the pic already exists...
-    #         if pic["id"] == picture["id"]:
-    #             data[pic] = picture
-    #             return {"message": f"picture with id {picture['id']} updated"}, 200
-    #     data.append(picture)
-    #     return make_response(jsonify(data[picture["id"]]), 201)
+    # get data from the json body
+    picture_in = request.json
 
-    # return {"message": "Internal server error"}, 500
+    for index, picture in enumerate(data):
+        if picture["id"] == id:
+            data[index] = picture_in
+            return picture, 201
 
+    return {"message": "picture not found"}, 404
 ######################################################################
 # DELETE A PICTURE
 ######################################################################
